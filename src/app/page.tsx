@@ -5,18 +5,19 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
+import {MP_ACCESS_TOKEN} from "@/lib/config";
 
-const client = new MercadoPagoConfig({accessToken: process.env.MP_ACCESS_TOKEN!});
+const mercadopago = new MercadoPagoConfig({accessToken: MP_ACCESS_TOKEN!});
 
 export default function HomePage() {
   async function donate(formData: FormData) {
     "use server";
 
-    const preference = await new Preference(client).create({
+    const preference = await new Preference(mercadopago).create({
       body: {
         items: [
           {
-            id: "donacion",
+            id: "message",
             title: formData.get("menssage") as string,
             quantity: 1,
             unit_price: Number(formData.get("amount")),
@@ -25,7 +26,7 @@ export default function HomePage() {
       },
     });
 
-    redirect(preference.sandbox_init_point!);
+    redirect(preference.init_point!);
   }
 
   return (
